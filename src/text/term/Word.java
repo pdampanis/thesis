@@ -9,12 +9,14 @@ public class Word implements Comparable<Word> {
     public String value;
     public int frequency = 1;
     public Double relativeFrequency;
-
+    public Double termWeight;
     public Word() {
         super();
+        this.termWeight = 0.0;
     }
 
     public Word(String value) {
+        this.termWeight = 0.0;
         this.value = value;
     }
 
@@ -24,6 +26,14 @@ public class Word implements Comparable<Word> {
 
     public void setValue(String value) {
         this.value = value;
+    }
+    
+    public void settermWeight(Double weight){
+        this.termWeight = weight;
+    }
+    
+    public Double gettermWeight(){
+        return termWeight;
     }
 
     public int getFrequency() {

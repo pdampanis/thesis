@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.ArrayList;
 import text.document.Document;
 import text.term.TermCollection;
+import text.term.TermCollectionProcessor;
 import text.term.TermPreprocessor;
+import text.term.Word;
 
 public class Summarizer {
 
@@ -54,6 +56,18 @@ public class Summarizer {
 
     public String[] getAllSentences() {
         return inputDoc.getAllSentences();
+    }
+    
+    public void sentenceWeighting(){
+        TermCollectionProcessor tcp = new TermCollectionProcessor();
+        tcp.insertAllTerms(inputDoc.getAllTerms());
+        List<Word> terms = tcp.getTermCollection().getWordList();
+        for(String sentence : inputDoc.getAllSentences()){
+            double score = 0.0;
+            for(Word term : terms){
+                //todo: store map of sentences along with their scores.
+            }
+        }        
     }
     
     public String[] getAllTerms() {

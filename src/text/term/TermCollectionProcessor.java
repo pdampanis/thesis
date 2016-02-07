@@ -78,10 +78,18 @@ public class TermCollectionProcessor {
         for (String value : values) {
             adjustTermFrequecy(value);
         }
+        computeTermWeighting();
         sort();
-        computeRelativeFrequencies();
     }
-
+    //public void computeTermWeighting(TermCollectionProcessor tcp)
+    public void computeTermWeighting() {
+        int totalFrequency = termCollection.getTotalFrequency();
+        List<Word> wordList = termCollection.getWordList();
+        for(Word word : wordList) {
+            word.termWeight = word.getFrequency() / (double)totalFrequency;
+        }
+    }
+    
     public void computeRelativeFrequencies() {
         int totalFrequency = getTermCollection().getTotalFrequency();
         List<Word> wordList = getTermCollection().getWordList();

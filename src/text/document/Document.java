@@ -12,6 +12,7 @@ public class Document {
 
     protected String name;
     protected String content;
+    public String[] sentences;
 
     public String loadFile(String filePath) {
         try {
@@ -55,7 +56,8 @@ public class Document {
     }
 
     public String[] getAllSentences() {
-        return createTextExtractor().extractSentences();
+        sentences =  createTextExtractor().extractSentences();
+        return sentences;
     }
 
     

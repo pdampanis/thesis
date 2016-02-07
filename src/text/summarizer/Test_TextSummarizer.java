@@ -12,6 +12,8 @@ public class Test_TextSummarizer {
 
     public static void main(String[] args) {
 
+        //todo: Maybe store or give the option to add files
+        // but the summarizer will handle one file every time unless we change this.
         String filePath = "SampleText.txt";
 
         String[] keywords = null;
@@ -20,22 +22,25 @@ public class Test_TextSummarizer {
         System.out.println(filePath);
         String text = summarizer.loadFile(filePath);
 
-        System.out.println(text);
+        //System.out.println(text);
+        // Extract text and get all sentences
         String[] allSentences = summarizer.getAllSentences();
+        /*
         for (String sentence : allSentences) {
             System.out.println(sentence);
             System.out.println("++++++++++++++++++++++++");
-        }
-        summarizer.setKeywords();
-        summarizer.printKeywords();
+        }*/
+        //summarizer.setKeywords();
+        //summarizer.printKeywords();
         
+        //todo: Decide how multiple docs will be handled.
         TermCollectionProcessor tcp = new TermCollectionProcessor();
         tcp.insertAllTerms(summarizer.getAllTerms()); 
         List<Word> terms = tcp.getTermCollection().getWordList();
         
                 
         for(Word term : terms){
-            System.out.println(term.value + ", " + term.frequency);
+            System.out.println(term.value + ", " + term.frequency + ", " + term.termWeight);
         }
         
         /*
