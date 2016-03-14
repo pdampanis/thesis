@@ -54,9 +54,9 @@ public class Test_TextSummarizer {
             System.out.println(index + "  " + score);
         }
 	       
-        for(Word term : terms){
-            System.out.println(term.value + ", " + term.frequency + ", " + term.termWeight);
-        }
+//        for(Word term : terms){
+//            System.out.println(term.value + ", " + term.frequency + ", " + term.termWeight);
+//        }
         
         /*
         tcp.getTermCollection().calculateFrequencies();
