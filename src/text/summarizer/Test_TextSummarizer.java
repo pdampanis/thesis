@@ -1,6 +1,10 @@
 package text.summarizer;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import text.term.TermCollectionProcessor;
 import text.term.Word;
 
@@ -24,7 +28,8 @@ public class Test_TextSummarizer {
 
         //System.out.println(text);
         // Extract text and get all sentences
-        String[] allSentences = summarizer.getAllSentences();
+        //String[] allSentences = summarizer.getAllSentences();
+
         /*
         for (String sentence : allSentences) {
             System.out.println(sentence);
@@ -36,9 +41,19 @@ public class Test_TextSummarizer {
         //todo: Decide how multiple docs will be handled.
         TermCollectionProcessor tcp = new TermCollectionProcessor();
         tcp.insertAllTerms(summarizer.getAllTerms()); 
+        tcp.sort();
         List<Word> terms = tcp.getTermCollection().getWordList();
-        
-                
+        summarizer.sentenceWeighting(tcp);
+        Map<Integer,Double> sentenceScoreMap = summarizer.getTfIdfSentenceScoreMap();
+        System.out.println("Sentences:");
+        Set<Integer> keys = sentenceScoreMap.keySet();
+        Iterator<Integer> iterator = keys.iterator();
+        while(iterator.hasNext()){
+            int index = iterator.next();
+            Double score = sentenceScoreMap.get(index);
+            System.out.println(index + "  " + score);
+        }
+	       
         for(Word term : terms){
             System.out.println(term.value + ", " + term.frequency + ", " + term.termWeight);
         }

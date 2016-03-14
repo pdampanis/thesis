@@ -12,7 +12,6 @@ public class Word implements Comparable<Word> {
     public Double termWeight;
     public Word() {
         super();
-        this.termWeight = 0.0;
     }
 
     public Word(String value) {

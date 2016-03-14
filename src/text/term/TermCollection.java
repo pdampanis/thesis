@@ -56,7 +56,7 @@ public class TermCollection implements Iterable<Word> {
 
     public int getTotalFrequency() {
         int totalFrequency = 0;
-        for (Word word : this) {
+        for (Word word : wordList) {
             totalFrequency += word.getFrequency();
         }
 

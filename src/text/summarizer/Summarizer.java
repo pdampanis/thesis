@@ -6,6 +6,8 @@ package text.summarizer;
  */
 import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import text.document.Document;
 import text.term.TermCollection;
 import text.term.TermCollectionProcessor;
@@ -17,6 +19,7 @@ public class Summarizer {
     private Document inputDoc;
     private String[] keywords = null;
     private TermCollection termCollection;
+    private Map<Integer,Double> TfIdfSentenceScoreMap;
 
     public String loadFile(String inputFile) {
         inputDoc = new Document();
@@ -45,7 +48,10 @@ public class Summarizer {
 
         this.keywords = processedTermList.toArray(new String[processedTermList.size()]);
     }
-
+    
+    public Map<Integer,Double> getTfIdfSentenceScoreMap(){
+        return this.TfIdfSentenceScoreMap;
+    }
 
     public void printKeywords() {
         System.out.println("#########################");
@@ -58,16 +64,23 @@ public class Summarizer {
         return inputDoc.getAllSentences();
     }
     
-    public void sentenceWeighting(){
-        TermCollectionProcessor tcp = new TermCollectionProcessor();
-        tcp.insertAllTerms(inputDoc.getAllTerms());
-        List<Word> terms = tcp.getTermCollection().getWordList();
-        for(String sentence : inputDoc.getAllSentences()){
-            double score = 0.0;
-            for(Word term : terms){
-                //todo: store map of sentences along with their scores.
-            }
-        }        
+    public void sentenceWeighting(TermCollectionProcessor tcp){
+        
+        TfIdfSentenceScoreMap = new HashMap<Integer,Double>();
+        String[] sentences = getAllSentences();
+        String[] terms;
+        int sentenceCount = 0;
+        for(String sentence : sentences){
+           terms = inputDoc.getTermsBySentence(sentence);
+           List<Word> wordList = tcp.computeTermWeighting(terms);
+           Double sum = 0.0;
+           for(Word word : wordList){
+               sum += word.termWeight * 1;// todo: compute IDF
+           }
+           TfIdfSentenceScoreMap.put(sentenceCount++, sum);
+           sum = 0.0;
+        }
+        
     }
     
     public String[] getAllTerms() {

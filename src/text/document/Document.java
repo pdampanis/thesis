@@ -59,6 +59,10 @@ public class Document {
         sentences =  createTextExtractor().extractSentences();
         return sentences;
     }
+    
+    public String[] getTermsBySentence(String sentence){
+        return new TextExtractor(sentence).extractTerms();
+    }
 
     
     private TextExtractor createTextExtractor() {

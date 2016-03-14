@@ -4,6 +4,7 @@ package text.term;
  *
  * @author Panagiotis Dampanis AM: 070095
  */
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
@@ -45,7 +46,7 @@ public class TermCollectionProcessor {
         return null;
     }
 
-    private void adjustTermFrequecy(String value) {
+    private void insertTerm(String value) {
         if (value == null) {
             return;
         }
@@ -61,7 +62,7 @@ public class TermCollectionProcessor {
             existingWord.incrementFrequency();
             return;
         }
-
+        // if term inserted for the first time
         getTermCollection().getWordList().add(new Word(preprocessValue));
 
     }
@@ -76,18 +77,27 @@ public class TermCollectionProcessor {
 
     public void insertAllTerms(String[] values) {
         for (String value : values) {
-            adjustTermFrequecy(value);
+            insertTerm(value);
         }
-        computeTermWeighting();
-        sort();
     }
+
     //public void computeTermWeighting(TermCollectionProcessor tcp)
-    public void computeTermWeighting() {
+    /**
+     *
+     * @param terms
+     */
+    public List<Word> computeTermWeighting(String[] terms) {
         int totalFrequency = termCollection.getTotalFrequency();
-        List<Word> wordList = termCollection.getWordList();
+        //List<Word> wordList = termCollection.getWordList();
+        List<Word> wordList = new ArrayList<Word>();
+        for(String term : terms){
+            wordList.add(new Word(term));
+        }
         for(Word word : wordList) {
+            //compute Term Frequency
             word.termWeight = word.getFrequency() / (double)totalFrequency;
         }
+        return wordList;
     }
     
     public void computeRelativeFrequencies() {

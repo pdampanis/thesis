@@ -21,15 +21,22 @@ public class TextExtractor {
         this.text = text;
     }
 
+    public TextExtractor() {
+    }
+    
+    public TextExtractor(String _text) {
+        this.text = _text;
+    }
+
     public String[] extractTerms() {
         BreakIterator boundary = BreakIterator.getWordInstance(Locale.US);
-        boundary.setText(getText());
+        boundary.setText(this.text);
 
         List<String> words = new ArrayList<String>();
         int start = boundary.first();
         int end = boundary.next();
         while (end != BreakIterator.DONE) {
-            String word = getText().substring(start, end).trim();
+            String word = this.text.substring(start, end).trim();
             if (!word.isEmpty()) {
                 words.add(word);
             }
