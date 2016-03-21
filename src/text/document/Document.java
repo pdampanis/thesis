@@ -7,14 +7,30 @@ package text.document;
 import java.util.Scanner;
 import java.io.IOException;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import text.term.TermCollection;
+import text.term.Word;
 
 public class Document {
 
+    private static final AtomicInteger count = new AtomicInteger(0);
+    protected int id;
     protected String name;
     protected String content;
-    public String[] sentences;
+    public List<Word> terms;
+    public List<String> sentences;
+    
 
-    public String loadFile(String filePath) {
+    public Document(String name) {
+        this.name = name;
+        this.id = count.incrementAndGet();
+        loadFile(name);
+        sentences = getAllSentences();
+    }
+
+    public void loadFile(String filePath) {
         try {
             Scanner scanner = new Scanner(new File(filePath));
             StringBuilder sb = new StringBuilder();
@@ -27,12 +43,17 @@ public class Document {
             }
 
             setContent(sb.toString());
-            return sb.toString();
         } catch (IOException e) {
             System.out.println("File does not exist.");
         }
-        return null;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return this.id;
     }
 
     public String getContent() {
@@ -51,24 +72,44 @@ public class Document {
         this.name = name;
     }
 
-    public String[] getAllTerms() {
-        return createTextExtractor().extractTerms();
-    }
-
-    public String[] getAllSentences() {
-        sentences =  createTextExtractor().extractSentences();
-        return sentences;
+    public List<Word> getTerms() {
+        List<String> strs = createTextExtractor().extractTerms();
+        List<Word> wordList = new ArrayList<Word>();
+        for (String str : strs) {
+            wordList.add(new Word(str));
+        }
+        TermCollection tc = new TermCollection(wordList);
+        tc.insertAllTerms();
+        List<Word> finalTerms = tc.getFinalTerms();
+        return finalTerms;
     }
     
-    public String[] getTermsBySentence(String sentence){
+    public void setTerms(List<Word> wordList){
+        for(Word word : wordList){
+            terms.add(word);
+        }
+    }
+
+    public List<String> getAllSentences() {
+        sentences = createTextExtractor().extractSentences();
+        TermCollection tc = new TermCollection();
+        tc.setSentences(sentences);
+        return sentences;
+    }
+
+    //todo: extract only terms not stems with their frequency
+    public List<String> getTermsBySentence(String sentence) {
         return new TextExtractor(sentence).extractTerms();
     }
 
-    
     private TextExtractor createTextExtractor() {
         TextExtractor text = new TextExtractor();
         text.setText(getContent());
         return text;
     }
-    
+
+    @Override
+    public String toString() {
+        return this.id + " " + this.name;
+    }
 }

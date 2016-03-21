@@ -1,12 +1,10 @@
 package text.summarizer;
 
-import java.util.HashMap;
-import java.util.Iterator;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import text.term.TermCollectionProcessor;
-import text.term.Word;
+import text.document.Document;
 
 /**
  *
@@ -18,56 +16,73 @@ public class Test_TextSummarizer {
 
         //todo: Maybe store or give the option to add files
         // but the summarizer will handle one file every time unless we change this.
-        String filePath = "SampleText.txt";
 
-        String[] keywords = null;
-        Summarizer summarizer = new Summarizer();
+        File f = new File("C:\\Users\\Panos\\Documents\\NetBeansProjects\\TextSummarizer_1\\greek_texts");
 
-        System.out.println(filePath);
-        String text = summarizer.loadFile(filePath);
-
-        //System.out.println(text);
-        // Extract text and get all sentences
-        //String[] allSentences = summarizer.getAllSentences();
-
-        /*
-        for (String sentence : allSentences) {
-            System.out.println(sentence);
-            System.out.println("++++++++++++++++++++++++");
-        }*/
-        //summarizer.setKeywords();
-        //summarizer.printKeywords();
+        FilenameFilter textFilter = new FilenameFilter() {
+            public boolean accept(File dir, String name) {
+                return name.toLowerCase().endsWith(".txt");
+            }
+        };
         
-        //todo: Decide how multiple docs will be handled.
-        TermCollectionProcessor tcp = new TermCollectionProcessor();
-        tcp.insertAllTerms(summarizer.getAllTerms()); 
-        tcp.sort();
-        List<Word> terms = tcp.getTermCollection().getWordList();
-        summarizer.sentenceWeighting(tcp);
-        Map<Integer,Double> sentenceScoreMap = summarizer.getTfIdfSentenceScoreMap();
-        System.out.println("Sentences:");
-        Set<Integer> keys = sentenceScoreMap.keySet();
-        Iterator<Integer> iterator = keys.iterator();
-        while(iterator.hasNext()){
-            int index = iterator.next();
-            Double score = sentenceScoreMap.get(index);
-            System.out.println(index + "  " + score);
+        List<Document> docs = new ArrayList<Document>();
+        File[] files = f.listFiles(textFilter);
+        for (File file : files) {
+            if (file.isDirectory()) {
+                System.out.print("directory:");
+            } else {
+                // is a file
+                docs.add(new Document(file.getAbsolutePath()));
+                
+            }
         }
-	       
+
+//        String filePath = "greek_texts\\SampleText_0.txt";
+//        String[] keywords = null;
+//        Summarizer summarizer = new Summarizer();
+//
+//        System.out.println(filePath);
+//
+//        summarizer.loadFile(filePath);
+//
+//        TermCollectionProcessor tcp = new TermCollectionProcessor();
+//
+//        tcp.insertAllTerms(summarizer.getAllTerms());
+//        List<Word> terms = tcp.getTermCollection().getWordList();
+//
+//        summarizer.sentenceWeighting(tcp);
+//        Map<Integer, Double> sentenceScoreMap = summarizer.getTfIdfSentenceScoreMap();
+//
+//        System.out.println(
+//                "Sentences:");
+//        Set<Integer> keys = sentenceScoreMap.keySet();
+//        Iterator<Integer> iterator = keys.iterator();
+//
+//        while (iterator.hasNext()) {
+//            int index = iterator.next();
+//            Double score = sentenceScoreMap.get(index);
+//            System.out.println(index + "  " + score);
+//        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
 //        for(Word term : terms){
 //            System.out.println(term.value + ", " + term.frequency + ", " + term.termWeight);
 //        }
+    /*
+         tcp.getTermCollection().calculateFrequencies();
+         System.out.println("======================================");
         
-        /*
-        tcp.getTermCollection().calculateFrequencies();
-        System.out.println("======================================");
-        
-        for(Word term : terms){
-            System.out.println(term.value + ", " + term.frequency);
-        }
-        */
-
-
+         for(Word term : terms){
+         System.out.println(term.value + ", " + term.frequency);
+         }
+         */
         /*
          String bodyContent = new HtmlPreprocessor().getBodyFromHtmlPage("https://el.wikipedia.org/wiki/%CE%97%CE%BD%CF%89%CE%BC%CE%AD%CE%BD%CE%B5%CF%82_%CE%A0%CE%BF%CE%BB%CE%B9%CF%84%CE%B5%CE%AF%CE%B5%CF%82_%CE%91%CE%BC%CE%B5%CF%81%CE%B9%CE%BA%CE%AE%CF%82");
          String text2 = summarizer.loadText(bodyContent);
@@ -81,7 +96,6 @@ public class Test_TextSummarizer {
          summarizer.setKeywords();
          summarizer.printKeywords();
          */
-
 //    generator.generateSignificantSentences();
         //System.out.println(generator.generateSummary());
     }

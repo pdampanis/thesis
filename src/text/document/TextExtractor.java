@@ -28,7 +28,7 @@ public class TextExtractor {
         this.text = _text;
     }
 
-    public String[] extractTerms() {
+    public List<String> extractTerms() {
         BreakIterator boundary = BreakIterator.getWordInstance(Locale.US);
         boundary.setText(this.text);
 
@@ -44,10 +44,10 @@ public class TextExtractor {
             end = boundary.next();
         }
 
-        return words.toArray(new String[words.size()]);
+        return words;
     }
 
-    public String[] extractSentences() {
+    public List<String> extractSentences() {
         BreakIterator boundary = BreakIterator.getSentenceInstance(Locale.US);
         boundary.setText(getText());
 
@@ -63,6 +63,6 @@ public class TextExtractor {
             end = boundary.next();
         }
 
-        return sentences.toArray(new String[sentences.size()]);
+        return sentences;
     }
 }

@@ -10,23 +10,22 @@ import java.util.HashMap;
 import java.util.Map;
 import text.document.Document;
 import text.term.TermCollection;
-import text.term.TermCollectionProcessor;
 import text.term.TermPreprocessor;
 import text.term.Word;
 
 public class Summarizer {
 
-    private Document inputDoc;
+    private List<Document> Documents;
     private String[] keywords = null;
     private TermCollection termCollection;
     private Map<Integer,Double> TfIdfSentenceScoreMap;
 
     public String loadFile(String inputFile) {
-        inputDoc = new Document();
+        inputDoc = new Document(inputFile);
         return inputDoc.loadFile(inputFile);
     }
     public String loadText(String text){
-        inputDoc = new Document();
+        inputDoc = new Document(text);
         inputDoc.setContent(text);
         return inputDoc.getContent();
     }
@@ -37,7 +36,7 @@ public class Summarizer {
         TermPreprocessor tp = new TermPreprocessor();
 
         String resultTerm = null;
-        String[] terms = inputDoc.getAllTerms();
+        List<String> terms = inputDoc.getAllTerms();
 
         for (String term : terms) {
             resultTerm = tp.preprocess(term);
@@ -60,15 +59,15 @@ public class Summarizer {
         }
     }
 
-    public String[] getAllSentences() {
+    public List<String> getAllSentences() {
         return inputDoc.getAllSentences();
     }
     
     public void sentenceWeighting(TermCollectionProcessor tcp){
         
         TfIdfSentenceScoreMap = new HashMap<Integer,Double>();
-        String[] sentences = getAllSentences();
-        String[] terms;
+        List<String> sentences = getAllSentences();
+        List<String> terms = new ArrayList<String>();
         int sentenceCount = 0;
         for(String sentence : sentences){
            terms = inputDoc.getTermsBySentence(sentence);
@@ -83,7 +82,7 @@ public class Summarizer {
         
     }
     
-    public String[] getAllTerms() {
+    public List<String> getAllTerms() {
         return inputDoc.getAllTerms();
     }
     //adasd
