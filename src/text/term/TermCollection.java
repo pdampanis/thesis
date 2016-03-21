@@ -164,7 +164,7 @@ public class TermCollection {
         return finalTerms;
     }
 
-    //todo:
+    //TODO:
     // Compute TF*IDF
     public void sentenceWeighting(int docId) {
 
@@ -175,7 +175,7 @@ public class TermCollection {
             List<Word> wordList = tcp.computeTermWeighting(terms);
             Double sum = 0.0;
             for (Word word : wordList) {
-                sum += word.termWeight * 1;// todo: compute IDF
+                sum += word.termWeight * 1;// TODO: compute IDF
             }
             TfIdfSentenceScoreMap.put(sentenceCount++, sum);
         }

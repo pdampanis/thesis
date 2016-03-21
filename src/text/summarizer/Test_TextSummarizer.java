@@ -14,7 +14,7 @@ public class Test_TextSummarizer {
 
     public static void main(String[] args) {
 
-        //todo: Maybe store or give the option to add files
+        //@todo: Maybe store or give the option to add files
         // but the summarizer will handle one file every time unless we change this.
 
         File f = new File("C:\\Users\\Panos\\Documents\\NetBeansProjects\\TextSummarizer_1\\greek_texts");

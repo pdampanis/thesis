@@ -97,7 +97,7 @@ public class Document {
         return sentences;
     }
 
-    //todo: extract only terms not stems with their frequency
+    //TODO: this extracts only terms not stems with their frequency
     public List<String> getTermsBySentence(String sentence) {
         return new TextExtractor(sentence).extractTerms();
     }
