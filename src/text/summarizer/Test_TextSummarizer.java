@@ -5,6 +5,7 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 import text.document.Document;
+import text.term.Word;
 
 /**
  *
@@ -13,9 +14,6 @@ import text.document.Document;
 public class Test_TextSummarizer {
 
     public static void main(String[] args) {
-
-        //@todo: Maybe store or give the option to add files
-        // but the summarizer will handle one file every time unless we change this.
 
         File f = new File("greek_texts");
 
@@ -26,13 +24,29 @@ public class Test_TextSummarizer {
         };
         
         List<Document> docs = new ArrayList<Document>();
+
         File[] files = f.listFiles(textFilter);
         for (File file : files) {
             if (file.isDirectory()) {
                 System.out.print("directory:");
             } else {
                 // is a file
-                docs.add(new Document(file.getAbsolutePath()));
+                Document doc = new Document(file.getAbsolutePath());
+                docs.add(doc);
+                System.out.println(doc.id + " " + doc.name);
+                
+                for(Word word : doc.terms){
+                    System.out.println(word.value + " " + word.frequency);
+                }
+                //TODO: Compute Weight functions 
+                System.out.println("+++++++++++++++++++++++++++++++++++++++++++++");
+                for(ArrayList<Word> a : doc.termsBySentence){
+
+                    for(Word w : a){
+                        System.out.println(w.value + " " + w.frequency);
+                    }
+                    System.out.println("===============================================================");
+                }
                 
             }
         }

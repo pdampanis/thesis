@@ -14,7 +14,7 @@ import java.util.Map;
 public class TermCollection {
 
     private List<Word> wordList;
-    private List<Word> finalTerms;
+    private ArrayList<Word> finalTerms;
     private List<String> sentences;
     private String[] termsBySentence;
     private Map<String, Integer> termFreqMap;
@@ -22,6 +22,7 @@ public class TermCollection {
 
     public TermCollection(List<Word> _wordList) {
         this.wordList = _wordList;
+        finalTerms = new ArrayList<Word>();
     }
 
     public TermCollection() {
@@ -31,7 +32,7 @@ public class TermCollection {
         this.sentences = sentences;
     }
 
-    public List<Word> getFinalTerms() {
+    public ArrayList<Word> getFinalTerms() {
         return finalTerms;
     }
 
@@ -109,7 +110,7 @@ public class TermCollection {
     }
 
     private Word findWordByValue(String value) {
-
+        
         for (Word word : finalTerms) {
             String strValue = word.getValue();
             if (value.equals(strValue)) {

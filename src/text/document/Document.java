@@ -16,12 +16,12 @@ import text.term.Word;
 public class Document {
 
     private static final AtomicInteger count = new AtomicInteger(0);
-    protected int id;
-    protected String name;
+    public int id;
+    public String name;
     protected String content;
-    public List<Word> terms;
-    public List<String> sentences;
-    public List<Word>[] termsBySentence;
+    public ArrayList<Word> terms;
+    public ArrayList<String> sentences;
+    public ArrayList<ArrayList<Word>> termsBySentence;
     
 
     public Document(String name) {
@@ -29,13 +29,11 @@ public class Document {
         this.id = count.incrementAndGet();
         loadFile(name);
         sentences = getAllSentences();
-        
+        terms = getTerms();
+        termsBySentence = new ArrayList<ArrayList<Word>>(sentences.size());
         
         for(String sentence : sentences){
-            List<String> preStems = getTermsBySentence(sentence);
-            for(String s : preStems){
-                //TODO: stem and insert it
-            }
+            termsBySentence.add(getTermsBySentence(sentence));
         }
     }
 
@@ -81,7 +79,7 @@ public class Document {
         this.name = name;
     }
 
-    public List<Word> getTerms() {
+    public ArrayList<Word> getTerms() {
         List<String> strs = createTextExtractor().extractTerms();
         List<Word> wordList = new ArrayList<Word>();
         for (String str : strs) {
@@ -89,7 +87,7 @@ public class Document {
         }
         TermCollection tc = new TermCollection(wordList);
         tc.insertAllTerms();
-        List<Word> finalTerms = tc.getFinalTerms();
+        ArrayList<Word> finalTerms = tc.getFinalTerms();
         return finalTerms;
     }
     
@@ -99,16 +97,23 @@ public class Document {
         }
     }
 
-    public List<String> getAllSentences() {
+    public ArrayList<String> getAllSentences() {
         sentences = createTextExtractor().extractSentences();
         TermCollection tc = new TermCollection();
         tc.setSentences(sentences);
         return sentences;
     }
 
-    //TODO: this extracts only terms not stems with their frequency
-    public List<String> getTermsBySentence(String sentence) {
-        return new TextExtractor(sentence).extractTerms();
+    public ArrayList<Word> getTermsBySentence(String sentence) {
+        ArrayList<String> strs = new TextExtractor(sentence).extractTerms();
+        ArrayList<Word> wordList = new ArrayList<Word>();
+        for (String str : strs) {
+            wordList.add(new Word(str));
+        }
+        TermCollection tc = new TermCollection(wordList);
+        tc.insertAllTerms();
+        ArrayList<Word> finalTerms = tc.getFinalTerms();
+        return finalTerms;
     }
 
     private TextExtractor createTextExtractor() {
