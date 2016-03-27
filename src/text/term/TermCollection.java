@@ -16,6 +16,7 @@ public class TermCollection {
     private List<Word> wordList;
     private List<Word> finalTerms;
     private List<String> sentences;
+    private String[] termsBySentence;
     private Map<String, Integer> termFreqMap;
     private Map<String, Double> TfIdfSentenceScoreMap;
 
@@ -166,20 +167,20 @@ public class TermCollection {
 
     //TODO:
     // Compute TF*IDF
-    public void sentenceWeighting(int docId) {
-
-        TfIdfSentenceScoreMap = new HashMap<String, Double>();
-        int sentenceCount = 0;
-        for (String sentence : sentences) {
-            terms = inputDoc.getTermsBySentence(sentence);
-            List<Word> wordList = tcp.computeTermWeighting(terms);
-            Double sum = 0.0;
-            for (Word word : wordList) {
-                sum += word.termWeight * 1;// TODO: compute IDF
-            }
-            TfIdfSentenceScoreMap.put(sentenceCount++, sum);
-        }
-    }
+//    public void sentenceWeighting(int docId) {
+//
+//        TfIdfSentenceScoreMap = new HashMap<String, Double>();
+//        int sentenceCount = 0;
+//        for (String sentence : sentences) {
+//            terms = inputDoc.getTermsBySentence(sentence);
+//            List<Word> wordList = tcp.computeTermWeighting(terms);
+//            Double sum = 0.0;
+//            for (Word word : wordList) {
+//                sum += word.termWeight * 1;// TODO: compute IDF
+//            }
+//            TfIdfSentenceScoreMap.put(sentenceCount++, sum);
+//        }
+//    }
 
     public void sort() {
         Word[] wordsArray = wordList.toArray(new Word[wordList.size()]);

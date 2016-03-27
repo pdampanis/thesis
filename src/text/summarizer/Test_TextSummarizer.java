@@ -17,7 +17,7 @@ public class Test_TextSummarizer {
         //@todo: Maybe store or give the option to add files
         // but the summarizer will handle one file every time unless we change this.
 
-        File f = new File("C:\\Users\\Panos\\Documents\\NetBeansProjects\\TextSummarizer_1\\greek_texts");
+        File f = new File("greek_texts");
 
         FilenameFilter textFilter = new FilenameFilter() {
             public boolean accept(File dir, String name) {

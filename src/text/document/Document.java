@@ -21,6 +21,7 @@ public class Document {
     protected String content;
     public List<Word> terms;
     public List<String> sentences;
+    public List<Word>[] termsBySentence;
     
 
     public Document(String name) {
@@ -28,6 +29,14 @@ public class Document {
         this.id = count.incrementAndGet();
         loadFile(name);
         sentences = getAllSentences();
+        
+        
+        for(String sentence : sentences){
+            List<String> preStems = getTermsBySentence(sentence);
+            for(String s : preStems){
+                //TODO: stem and insert it
+            }
+        }
     }
 
     public void loadFile(String filePath) {
