@@ -5,6 +5,8 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 import text.document.Document;
+import text.document.Sentence;
+import text.term.TermCollection;
 import text.term.Word;
 
 /**
@@ -23,7 +25,7 @@ public class Test_TextSummarizer {
             }
         };
         
-        List<Document> docs = new ArrayList<Document>();
+        ArrayList<Document> docs = new ArrayList<Document>();
 
         File[] files = f.listFiles(textFilter);
         for (File file : files) {
@@ -33,6 +35,7 @@ public class Test_TextSummarizer {
                 // is a file
                 Document doc = new Document(file.getAbsolutePath());
                 docs.add(doc);
+                /*
                 System.out.println(doc.id + " " + doc.name);
                 
                 for(Word word : doc.terms){
@@ -47,9 +50,37 @@ public class Test_TextSummarizer {
                     }
                     System.out.println("===============================================================");
                 }
+                * */
                 
             }
         }
+        int numberOfDocuments = docs.size();
+        // TF, IDF
+        for(Document doc : docs){
+            System.out.println("==========================================");
+            System.out.println(doc);
+            Summarizer summarizer = new Summarizer(doc.terms, numberOfDocuments);
+            summarizer.getTermWeights();
+            for(Word word : doc.terms){
+                word.termWeightInACollection = Math.log10( numberOfDocuments / getDocFreq(word, docs));
+            }
+        }
+        
+        // Sentence Weighting - TF*IDF
+        for(Document doc : docs){
+            for(Sentence sentence : doc.sentences){
+                sentence.setAllTerms(doc.terms);
+                Double sum = 0.0;
+                for(Word word : sentence.terms){
+                    sum += word.termWeight * word.termWeightInACollection;
+                }
+                sentence.TF_IDF_weight = sum;
+                System.out.println(sentence.value + "==================================\n" + sentence.TF_IDF_weight);
+            }
+        }
+        
+        // TODO: Compute Sentence weighting based on TF*ISF  Equation (8)
+        
 
 //        String filePath = "greek_texts\\SampleText_0.txt";
 //        String[] keywords = null;
@@ -112,5 +143,22 @@ public class Test_TextSummarizer {
          */
 //    generator.generateSignificantSentences();
         //System.out.println(generator.generateSummary());
+    }
+    
+    public static Double getDocFreq(Word word, ArrayList<Document> docs){
+        Double wordInDocs = 0.0;
+        for(Document doc : docs){
+            if(isDocumentContains(word, doc.terms))
+                wordInDocs += 1.0;
+        }
+        return wordInDocs ;
+    }
+    
+    public static boolean isDocumentContains(Word word, ArrayList<Word> terms){
+        for(Word term : terms){
+            if(word.value.equals(term.value))
+                return true;
+        }
+        return false;
     }
 }

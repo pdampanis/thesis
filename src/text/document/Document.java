@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import text.term.TermCollection;
+import text.term.TermPreprocessor;
 import text.term.Word;
 
 public class Document {
@@ -20,7 +21,8 @@ public class Document {
     public String name;
     protected String content;
     public ArrayList<Word> terms;
-    public ArrayList<String> sentences;
+    public ArrayList<String> stringSentences;
+    public ArrayList<Sentence> sentences;
     public ArrayList<ArrayList<Word>> termsBySentence;
     
 
@@ -28,12 +30,15 @@ public class Document {
         this.name = name;
         this.id = count.incrementAndGet();
         loadFile(name);
-        sentences = getAllSentences();
+        stringSentences = getAllSentences();
         terms = getTerms();
-        termsBySentence = new ArrayList<ArrayList<Word>>(sentences.size());
+        termsBySentence = new ArrayList<ArrayList<Word>>(stringSentences.size());
+        sentences = new ArrayList<Sentence>();
         
-        for(String sentence : sentences){
-            termsBySentence.add(getTermsBySentence(sentence));
+        for(String sentence : stringSentences){
+            ArrayList<Word> termsBySent = getTermsBySentence(sentence);
+            sentences.add(new Sentence(sentence, termsBySent));
+            termsBySentence.add(termsBySent);
         }
     }
 
@@ -98,22 +103,25 @@ public class Document {
     }
 
     public ArrayList<String> getAllSentences() {
-        sentences = createTextExtractor().extractSentences();
+        stringSentences = createTextExtractor().extractSentences();
         TermCollection tc = new TermCollection();
-        tc.setSentences(sentences);
-        return sentences;
+        tc.setSentences(stringSentences);
+        return stringSentences;
     }
 
     public ArrayList<Word> getTermsBySentence(String sentence) {
         ArrayList<String> strs = new TextExtractor(sentence).extractTerms();
         ArrayList<Word> wordList = new ArrayList<Word>();
         for (String str : strs) {
-            wordList.add(new Word(str));
+            String temp = new TermPreprocessor().preprocess(str);
+            if(temp != null)
+                wordList.add(new Word(temp));
         }
-        TermCollection tc = new TermCollection(wordList);
-        tc.insertAllTerms();
-        ArrayList<Word> finalTerms = tc.getFinalTerms();
-        return finalTerms;
+        //TermCollection tc = new TermCollection(wordList);
+        //tc.insertAllTerms();
+        //ArrayList<Word> finalTerms = tc.getFinalTerms();
+        //return finalTerms;
+        return wordList;
     }
 
     private TextExtractor createTextExtractor() {

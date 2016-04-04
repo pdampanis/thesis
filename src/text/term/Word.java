@@ -10,12 +10,14 @@ public class Word implements Comparable<Word> {
     public int frequency = 1;
     public Double relativeFrequency;
     public Double termWeight;
+    public Double termWeightInACollection;
     public Word() {
         super();
     }
 
     public Word(String value) {
         this.termWeight = 0.0;
+        this.termWeightInACollection = 0.0;
         this.value = value;
     }
 
