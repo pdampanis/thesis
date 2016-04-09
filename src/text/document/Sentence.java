@@ -18,6 +18,7 @@ public class Sentence {
     public ArrayList<Word> terms;
     public ArrayList<Word> allTerms;
     public Double TF_IDF_weight;
+    public Double TF_ISF_weight;
     private Map<String, Double> mapTF;
     private Map<String, Double> mapIDF;
 

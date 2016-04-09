@@ -24,7 +24,7 @@ public class Test_TextSummarizer {
                 return name.toLowerCase().endsWith(".txt");
             }
         };
-        
+
         ArrayList<Document> docs = new ArrayList<Document>();
 
         File[] files = f.listFiles(textFilter);
@@ -36,51 +36,69 @@ public class Test_TextSummarizer {
                 Document doc = new Document(file.getAbsolutePath());
                 docs.add(doc);
                 /*
-                System.out.println(doc.id + " " + doc.name);
+                 System.out.println(doc.id + " " + doc.name);
                 
-                for(Word word : doc.terms){
-                    System.out.println(word.value + " " + word.frequency);
-                }
-                //TODO: Compute Weight functions 
-                System.out.println("+++++++++++++++++++++++++++++++++++++++++++++");
-                for(ArrayList<Word> a : doc.termsBySentence){
+                 for(Word word : doc.terms){
+                 System.out.println(word.value + " " + word.frequency);
+                 }
+                 //TODO: Compute Weight functions 
+                 System.out.println("+++++++++++++++++++++++++++++++++++++++++++++");
+                 for(ArrayList<Word> a : doc.termsBySentence){
 
-                    for(Word w : a){
-                        System.out.println(w.value + " " + w.frequency);
-                    }
-                    System.out.println("===============================================================");
-                }
-                * */
-                
+                 for(Word w : a){
+                 System.out.println(w.value + " " + w.frequency);
+                 }
+                 System.out.println("===============================================================");
+                 }
+                 * */
+
             }
         }
         int numberOfDocuments = docs.size();
         // TF, IDF
-        for(Document doc : docs){
+        for (Document doc : docs) {
             System.out.println("==========================================");
             System.out.println(doc);
             Summarizer summarizer = new Summarizer(doc.terms, numberOfDocuments);
             summarizer.getTermWeights();
-            for(Word word : doc.terms){
-                word.termWeightInACollection = Math.log10( numberOfDocuments / getDocFreq(word, docs));
+            for (Word word : doc.terms) {
+                word.termWeightInACollection = Math.log10(numberOfDocuments / getDocFreq(word, docs));
             }
         }
-        
+
+        /*
         // Sentence Weighting - TF*IDF
-        for(Document doc : docs){
-            for(Sentence sentence : doc.sentences){
+        for (Document doc : docs) {
+            for (Sentence sentence : doc.sentences) {
                 sentence.setAllTerms(doc.terms);
                 Double sum = 0.0;
-                for(Word word : sentence.terms){
+                for (Word word : sentence.terms) {
                     sum += word.termWeight * word.termWeightInACollection;
                 }
                 sentence.TF_IDF_weight = sum;
                 System.out.println(sentence.value + "==================================\n" + sentence.TF_IDF_weight);
             }
         }
-        
-        // TODO: Compute Sentence weighting based on TF*ISF  Equation (8)
-        
+        * */
+        // Compute Sentence weighting based on TF*ISF
+        for (Document doc : docs) {
+            for (Sentence sentence : doc.sentences) {
+                sentence.setAllTerms(doc.terms);
+            }
+        }
+
+        for (Document doc : docs) {
+            for (Sentence sentence : doc.sentences) {
+                Double sum = 0.0;
+                for (Word word : sentence.terms) {
+                    sum += word.termWeight * ns(word, doc.sentences);
+                }
+                sentence.TF_ISF_weight = sum;
+                System.out.println(sentence.value + "==================================\n" + sentence.TF_ISF_weight);
+            }
+            System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        }
+
 
 //        String filePath = "greek_texts\\SampleText_0.txt";
 //        String[] keywords = null;
@@ -108,15 +126,15 @@ public class Test_TextSummarizer {
 //            Double score = sentenceScoreMap.get(index);
 //            System.out.println(index + "  " + score);
 //        }
-        
-        
-        
-        
-        
-        
-        
-        
-        
+
+
+
+
+
+
+
+
+
 //        for(Word term : terms){
 //            System.out.println(term.value + ", " + term.frequency + ", " + term.termWeight);
 //        }
@@ -144,21 +162,33 @@ public class Test_TextSummarizer {
 //    generator.generateSignificantSentences();
         //System.out.println(generator.generateSummary());
     }
-    
-    public static Double getDocFreq(Word word, ArrayList<Document> docs){
+
+    public static Double getDocFreq(Word word, ArrayList<Document> docs) {
         Double wordInDocs = 0.0;
-        for(Document doc : docs){
-            if(isDocumentContains(word, doc.terms))
+        for (Document doc : docs) {
+            if (contains(word, doc.terms)) {
                 wordInDocs += 1.0;
+            }
         }
-        return wordInDocs ;
+        return wordInDocs;
     }
-    
-    public static boolean isDocumentContains(Word word, ArrayList<Word> terms){
-        for(Word term : terms){
-            if(word.value.equals(term.value))
+
+    public static boolean contains(Word word, ArrayList<Word> terms) {
+        for (Word term : terms) {
+            if (word.value.equals(term.value)) {
                 return true;
+            }
         }
         return false;
+    }
+
+    public static int ns(Word word, ArrayList<Sentence> sentences) {
+        int ns = 0;
+        for (Sentence sentence : sentences) {
+            if (contains(word, sentence.terms)) {
+                ns++;
+            }
+        }
+        return ns;
     }
 }
