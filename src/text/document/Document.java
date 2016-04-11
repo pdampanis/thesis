@@ -7,14 +7,42 @@ package text.document;
 import java.util.Scanner;
 import java.io.IOException;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import text.term.TermCollection;
+import text.term.TermPreprocessor;
+import text.term.Word;
 
 public class Document {
 
-    protected String name;
+    private static final AtomicInteger count = new AtomicInteger(0);
+    public int id;
+    public String name;
     protected String content;
-    public String[] sentences;
+    public ArrayList<Word> terms;
+    public ArrayList<String> stringSentences;
+    public ArrayList<Sentence> sentences;
+    public ArrayList<ArrayList<Word>> termsBySentence;
+    
 
-    public String loadFile(String filePath) {
+    public Document(String name) {
+        this.name = name;
+        this.id = count.incrementAndGet();
+        loadFile(name);
+        stringSentences = getAllSentences();
+        terms = getTerms();
+        termsBySentence = new ArrayList<ArrayList<Word>>(stringSentences.size());
+        sentences = new ArrayList<Sentence>();
+        
+        for(String sentence : stringSentences){
+            ArrayList<Word> termsBySent = getTermsBySentence(sentence);
+            sentences.add(new Sentence(sentence, termsBySent));
+            termsBySentence.add(termsBySent);
+        }
+    }
+
+    public void loadFile(String filePath) {
         try {
             Scanner scanner = new Scanner(new File(filePath));
             StringBuilder sb = new StringBuilder();
@@ -27,12 +55,17 @@ public class Document {
             }
 
             setContent(sb.toString());
-            return sb.toString();
         } catch (IOException e) {
             System.out.println("File does not exist.");
         }
-        return null;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return this.id;
     }
 
     public String getContent() {
@@ -51,24 +84,50 @@ public class Document {
         this.name = name;
     }
 
-    public String[] getAllTerms() {
-        return createTextExtractor().extractTerms();
-    }
-
-    public String[] getAllSentences() {
-        sentences =  createTextExtractor().extractSentences();
-        return sentences;
+    public ArrayList<Word> getTerms() {
+        List<String> strs = createTextExtractor().extractTerms();
+        List<Word> wordList = new ArrayList<Word>();
+        for (String str : strs) {
+            wordList.add(new Word(str));
+        }
+        TermCollection tc = new TermCollection(wordList);
+        tc.insertAllTerms();
+        ArrayList<Word> finalTerms = tc.getFinalTerms();
+        return finalTerms;
     }
     
-    public String[] getTermsBySentence(String sentence){
-        return new TextExtractor(sentence).extractTerms();
+    public void setTerms(List<Word> wordList){
+        for(Word word : wordList){
+            terms.add(word);
+        }
     }
 
-    
+    public ArrayList<String> getAllSentences() {
+        stringSentences = createTextExtractor().extractSentences();
+        TermCollection tc = new TermCollection();
+        tc.setSentences(stringSentences);
+        return stringSentences;
+    }
+
+    public ArrayList<Word> getTermsBySentence(String sentence) {
+        ArrayList<String> strs = new TextExtractor(sentence).extractTerms();
+        ArrayList<Word> wordList = new ArrayList<Word>();
+        for (String str : strs) {
+            String temp = new TermPreprocessor().preprocess(str);
+            if(temp != null)
+                wordList.add(new Word(temp));
+        }
+        return wordList;
+    }
+
     private TextExtractor createTextExtractor() {
         TextExtractor text = new TextExtractor();
         text.setText(getContent());
         return text;
     }
-    
+
+    @Override
+    public String toString() {
+        return this.id + " " + this.name;
+    }
 }

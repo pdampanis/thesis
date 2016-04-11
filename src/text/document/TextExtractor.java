@@ -6,7 +6,6 @@ package text.document;
  */
 import java.text.BreakIterator;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 public class TextExtractor {
@@ -28,11 +27,11 @@ public class TextExtractor {
         this.text = _text;
     }
 
-    public String[] extractTerms() {
+    public ArrayList<String> extractTerms() {
         BreakIterator boundary = BreakIterator.getWordInstance(Locale.US);
         boundary.setText(this.text);
 
-        List<String> words = new ArrayList<String>();
+        ArrayList<String> words = new ArrayList<String>();
         int start = boundary.first();
         int end = boundary.next();
         while (end != BreakIterator.DONE) {
@@ -44,14 +43,14 @@ public class TextExtractor {
             end = boundary.next();
         }
 
-        return words.toArray(new String[words.size()]);
+        return words;
     }
 
-    public String[] extractSentences() {
+    public ArrayList<String> extractSentences() {
         BreakIterator boundary = BreakIterator.getSentenceInstance(Locale.US);
         boundary.setText(getText());
 
-        List<String> sentences = new ArrayList<String>();
+        ArrayList<String> sentences = new ArrayList<String>();
         int start = boundary.first();
         int end = boundary.next();
         while (end != BreakIterator.DONE) {
@@ -63,6 +62,6 @@ public class TextExtractor {
             end = boundary.next();
         }
 
-        return sentences.toArray(new String[sentences.size()]);
+        return sentences;
     }
 }
