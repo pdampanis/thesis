@@ -117,10 +117,6 @@ public class Document {
             if(temp != null)
                 wordList.add(new Word(temp));
         }
-        //TermCollection tc = new TermCollection(wordList);
-        //tc.insertAllTerms();
-        //ArrayList<Word> finalTerms = tc.getFinalTerms();
-        //return finalTerms;
         return wordList;
     }
 

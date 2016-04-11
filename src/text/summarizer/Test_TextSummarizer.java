@@ -3,10 +3,8 @@ package text.summarizer;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
-import java.util.List;
 import text.document.Document;
 import text.document.Sentence;
-import text.term.TermCollection;
 import text.term.Word;
 
 /**
@@ -35,69 +33,14 @@ public class Test_TextSummarizer {
                 // is a file
                 Document doc = new Document(file.getAbsolutePath());
                 docs.add(doc);
-                /*
-                 System.out.println(doc.id + " " + doc.name);
-                
-                 for(Word word : doc.terms){
-                 System.out.println(word.value + " " + word.frequency);
-                 }
-                 //TODO: Compute Weight functions 
-                 System.out.println("+++++++++++++++++++++++++++++++++++++++++++++");
-                 for(ArrayList<Word> a : doc.termsBySentence){
+            }
+        }
+        
+        Summarizer summarizer = new Summarizer(docs);
+        summarizer.summarize();
+        
+        
 
-                 for(Word w : a){
-                 System.out.println(w.value + " " + w.frequency);
-                 }
-                 System.out.println("===============================================================");
-                 }
-                 * */
-
-            }
-        }
-        int numberOfDocuments = docs.size();
-        // TF, IDF
-        for (Document doc : docs) {
-            System.out.println("==========================================");
-            System.out.println(doc);
-            Summarizer summarizer = new Summarizer(doc.terms, numberOfDocuments);
-            summarizer.getTermWeights();
-            for (Word word : doc.terms) {
-                word.termWeightInACollection = Math.log10(numberOfDocuments / getDocFreq(word, docs));
-            }
-        }
-
-        /*
-        // Sentence Weighting - TF*IDF
-        for (Document doc : docs) {
-            for (Sentence sentence : doc.sentences) {
-                sentence.setAllTerms(doc.terms);
-                Double sum = 0.0;
-                for (Word word : sentence.terms) {
-                    sum += word.termWeight * word.termWeightInACollection;
-                }
-                sentence.TF_IDF_weight = sum;
-                System.out.println(sentence.value + "==================================\n" + sentence.TF_IDF_weight);
-            }
-        }
-        * */
-        // Compute Sentence weighting based on TF*ISF
-        for (Document doc : docs) {
-            for (Sentence sentence : doc.sentences) {
-                sentence.setAllTerms(doc.terms);
-            }
-        }
-
-        for (Document doc : docs) {
-            for (Sentence sentence : doc.sentences) {
-                Double sum = 0.0;
-                for (Word word : sentence.terms) {
-                    sum += word.termWeight * ns(word, doc.sentences);
-                }
-                sentence.TF_ISF_weight = sum;
-                System.out.println(sentence.value + "==================================\n" + sentence.TF_ISF_weight);
-            }
-            System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-        }
 
 
 //        String filePath = "greek_texts\\SampleText_0.txt";
@@ -163,32 +106,5 @@ public class Test_TextSummarizer {
         //System.out.println(generator.generateSummary());
     }
 
-    public static Double getDocFreq(Word word, ArrayList<Document> docs) {
-        Double wordInDocs = 0.0;
-        for (Document doc : docs) {
-            if (contains(word, doc.terms)) {
-                wordInDocs += 1.0;
-            }
-        }
-        return wordInDocs;
-    }
 
-    public static boolean contains(Word word, ArrayList<Word> terms) {
-        for (Word term : terms) {
-            if (word.value.equals(term.value)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static int ns(Word word, ArrayList<Sentence> sentences) {
-        int ns = 0;
-        for (Sentence sentence : sentences) {
-            if (contains(word, sentence.terms)) {
-                ns++;
-            }
-        }
-        return ns;
-    }
 }

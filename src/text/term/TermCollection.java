@@ -156,6 +156,7 @@ public class TermCollection {
         }
     }
 
+    /*
     // Compute TF
     public List<Word> computeTermWeights() {
         int totalFrequency = getTotalFrequency();
@@ -192,5 +193,5 @@ public class TermCollection {
             i.next();
             i.set(wordsArray[j]);
         }
-    }
+    }*/
 }

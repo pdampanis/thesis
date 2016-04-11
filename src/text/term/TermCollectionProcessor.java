@@ -99,15 +99,4 @@ public class TermCollectionProcessor {
         }
         return wordList;
     }
-    
-    public void computeRelativeFrequencies() {
-        int totalFrequency = getTermCollection().getTotalFrequency();
-        List<Word> wordList = getTermCollection().getWordList();
-        for (Word word : wordList) {
-            int absoluteFreq = word.getFrequency();
-            double relativeFrequency = (double) absoluteFreq
-                    / (double) totalFrequency;
-            word.setRelativeFrequency(relativeFrequency);
-        }
-    }
 }

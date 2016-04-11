@@ -6,7 +6,6 @@ package text.document;
  */
 import java.text.BreakIterator;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 public class TextExtractor {

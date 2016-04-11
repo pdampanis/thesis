@@ -49,14 +49,6 @@ public class Word implements Comparable<Word> {
         this.frequency = frequency;
     }
 
-    public Double getRelativeFrequency() {
-        return relativeFrequency;
-    }
-
-    public void setRelativeFrequency(Double aRelativeFrequency) {
-        relativeFrequency = aRelativeFrequency;
-    }
-
     public int length() {
         return getValue().length();
     }
@@ -81,13 +73,6 @@ public class Word implements Comparable<Word> {
             return false;
         }
         return true;
-    }
-
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((value == null) ? 0 : value.hashCode());
-        return result;
     }
 
     public int compareTo(Word otherWord) {
