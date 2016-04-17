@@ -1,11 +1,11 @@
 package text.summarizer;
 
+import html.text.HtmlPreprocessor;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
+import pdf.text.PdfPreprocessor;
 import text.document.Document;
-import text.document.Sentence;
-import text.term.Word;
 
 /**
  *
@@ -14,6 +14,30 @@ import text.term.Word;
 public class Test_TextSummarizer {
 
     public static void main(String[] args) {
+
+        int i = 0;
+        new HtmlPreprocessor().toFile("html_" + i++, new HtmlPreprocessor().getBodyFromHtmlPage("http://www.naftemporiki.gr/story/1094966/"));
+        new HtmlPreprocessor().toFile("html_" + i++, new HtmlPreprocessor().getBodyFromHtmlPage("http://www.naftemporiki.gr/story/1094893/"));
+        new HtmlPreprocessor().toFile("html_" + i++, new HtmlPreprocessor().getBodyFromHtmlPage("http://www.naftemporiki.gr/story/1094961/"));
+        new HtmlPreprocessor().toFile("html_" + i++, new HtmlPreprocessor().getBodyFromHtmlPage("http://www.naftemporiki.gr/story/1094812/"));
+        new HtmlPreprocessor().toFile("html_" + i++, new HtmlPreprocessor().getBodyFromHtmlPage("http://www.naftemporiki.gr/story/1094784/"));
+
+
+//        FilenameFilter pdfFilter = new FilenameFilter() {
+//            public boolean accept(File dir, String name) {
+//                return name.toLowerCase().endsWith(".pdf");
+//            }
+//        };
+//
+//        File[] files = f.listFiles(pdfFilter);
+//        for (File file : files) {
+//            if (file.isDirectory()) {
+//                System.out.print("directory:");
+//            } else {
+//                // is a file
+//                new PdfPreprocessor().pdfToText(file);
+//            }
+//        }
 
         File f = new File("greek_texts");
 
@@ -25,21 +49,25 @@ public class Test_TextSummarizer {
 
         ArrayList<Document> docs = new ArrayList<Document>();
 
-        File[] files = f.listFiles(textFilter);
-        for (File file : files) {
+        File[] textFiles = f.listFiles(textFilter);
+        for (File file : textFiles) {
             if (file.isDirectory()) {
                 System.out.print("directory:");
             } else {
                 // is a file
                 Document doc = new Document(file.getAbsolutePath());
+                System.out.println(doc);
                 docs.add(doc);
             }
         }
-        
+
+
         Summarizer summarizer = new Summarizer(docs);
         summarizer.summarize();
-        
-        
+
+
+
+
 
 
 
@@ -105,6 +133,4 @@ public class Test_TextSummarizer {
 //    generator.generateSignificantSentences();
         //System.out.println(generator.generateSummary());
     }
-
-
 }
