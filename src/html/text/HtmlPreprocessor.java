@@ -4,8 +4,11 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 /**
  *
@@ -15,32 +18,30 @@ public class HtmlPreprocessor {
 
     public String getBodyFromHtmlPage(String page) {
         Document doc;
-        String body = null;
+        String content = null;
         try {
             doc = Jsoup.connect(page).get();
-            body = doc.body().text();
+            Elements title = doc.select("#sTitle");
+            StringBuilder sb = new StringBuilder();
+            for (Element element : title) {
+                sb.append(element.text() + ".\n");
+            }
+            Elements elements = doc.select("#spBody");
+            for (Element element : elements) {
+                sb.append(element.text());
+            }
+            content = sb.toString();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return body;
+        return content;
     }
 
-    public void toFile(String filename, String content) {
+    public void toFile(String fileName, String content) {
         try {
-            File file = new File(filename);
-
-            // if file doesnt exists, then create it
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-
-            FileWriter fw = new FileWriter(file.getAbsoluteFile());
-            BufferedWriter bw = new BufferedWriter(fw);
-            bw.write(content);
-            bw.close();
-
-            System.out.println("Done");
-
+            BufferedWriter out = new BufferedWriter(new FileWriter("greek_texts/" + fileName + ".txt"));
+            out.write(content);
+            out.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
