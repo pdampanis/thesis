@@ -160,25 +160,4 @@ public class Summarizer {
             }
         }
     }
-    /*
-     * TODO:
-     public String generateSummary() {
-     String[] significantSentences = generateSignificantSentences();
-     // ***TO WRITE REST OF CODE
-     }
-
-     public String[] generateSignificantSentences() {
-     String[] allSentences = getAllSentences();
-     double[] scores = calcAllSentenceScores();
-     // ***TO WRITE REST OF CODE
-     }
-
-     public String[] getAllSentences() {
-     return inputDoc.getAllSentences();
-     }
-
-     public double[] calcAllSentenceScores() {
-     // ***TO WRITE REST OF CODE
-     }
-     * */
 }
