@@ -1,7 +1,6 @@
 package text.document;
 
 import java.util.ArrayList;
-import java.util.Map;
 import text.term.Word;
 
 /**
@@ -15,8 +14,6 @@ public class Sentence {
     public ArrayList<Word> allTerms;
     public Double TF_IDF_weight;
     public Double TF_ISF_weight;
-    private Map<String, Double> mapTF;
-    private Map<String, Double> mapIDF;
 
     public Sentence(String _value, ArrayList<Word> _terms) {
         value = _value;

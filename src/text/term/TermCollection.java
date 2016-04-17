@@ -5,7 +5,6 @@ package text.term;
  * @author Panagiotis Dampanis AM: 070095
  */
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
@@ -16,9 +15,7 @@ public class TermCollection {
     private List<Word> wordList;
     private ArrayList<Word> finalTerms;
     private List<String> sentences;
-    private String[] termsBySentence;
     private Map<String, Integer> termFreqMap;
-    private Map<String, Double> TfIdfSentenceScoreMap;
 
     public TermCollection(List<Word> _wordList) {
         this.wordList = _wordList;
@@ -68,19 +65,6 @@ public class TermCollection {
         }
 
         return totalFrequency;
-    }
-
-    public Word[] toArray() {
-        return wordList.toArray(new Word[wordList.size()]);
-    }
-
-    public String[] toValuesArray() {
-        List<String> values = new ArrayList<String>();
-        for (Word word : wordList) {
-            values.add(word.getValue());
-        }
-
-        return wordList.toArray(new String[values.size()]);
     }
 
     public String[] getWordValues() {
@@ -155,43 +139,4 @@ public class TermCollection {
             insertTerm(term);
         }
     }
-
-    /*
-    // Compute TF
-    public List<Word> computeTermWeights() {
-        int totalFrequency = getTotalFrequency();
-        for (Word word : finalTerms) {
-            //compute Term Frequency
-            word.termWeight = word.getFrequency() / (double) totalFrequency;
-        }
-        return finalTerms;
-    }
-
-    //TODO:
-    // Compute TF*IDF
-//    public void sentenceWeighting(int docId) {
-//
-//        TfIdfSentenceScoreMap = new HashMap<String, Double>();
-//        int sentenceCount = 0;
-//        for (String sentence : sentences) {
-//            terms = inputDoc.getTermsBySentence(sentence);
-//            List<Word> wordList = tcp.computeTermWeighting(terms);
-//            Double sum = 0.0;
-//            for (Word word : wordList) {
-//                sum += word.termWeight * 1;// TODO: compute IDF
-//            }
-//            TfIdfSentenceScoreMap.put(sentenceCount++, sum);
-//        }
-//    }
-
-    public void sort() {
-        Word[] wordsArray = wordList.toArray(new Word[wordList.size()]);
-        Arrays.sort(wordsArray);
-
-        ListIterator<Word> i = wordList.listIterator();
-        for (int j = 0; j < wordsArray.length; j++) {
-            i.next();
-            i.set(wordsArray[j]);
-        }
-    }*/
 }
