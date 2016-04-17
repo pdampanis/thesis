@@ -14,6 +14,7 @@ public class Sentence {
     public ArrayList<Word> allTerms;
     public Double TF_IDF_weight;
     public Double TF_ISF_weight;
+    public Double TF_RIDF_weight;
 
     public Sentence(String _value, ArrayList<Word> _terms) {
         value = _value;

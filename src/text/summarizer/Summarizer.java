@@ -25,12 +25,10 @@ public class Summarizer {
         calculateTermWeights();
         calculateIDF();
         initiateSentences();
-
-        //calculateTF_IDF();
-        //calculateTF_ISF();
-
         System.out.println("++++++++++++++++++++++++++++++\n");
-        calculateTF_RIDF();
+        //calculateTF_RIDF();
+        //calculateTF_IDF();
+        calculateTF_ISF();
     }
 
     // compute Term Frequency - TF
@@ -69,7 +67,9 @@ public class Summarizer {
                     sum += word.termWeight * word.termWeightInACollection;
                 }
                 sentence.TF_IDF_weight = sum;
+                System.out.println(sentence.value + "==================================\n" + sentence.TF_IDF_weight);
             }
+            System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         }
     }
 
@@ -97,8 +97,8 @@ public class Summarizer {
                     Double rIDF = word.termWeightInACollection + Math.log10(1 - Math.exp(-(totFreq(word) / Double.valueOf(numberOfDocs * 1.0))));
                     sum += word.termWeight * rIDF;
                 }
-                sentence.TF_ISF_weight = sum;
-                System.out.println(sentence.value + "==================================\n" + sentence.TF_ISF_weight);
+                sentence.TF_RIDF_weight = sum;
+                System.out.println(sentence.value + "==================================\n" + sentence.TF_RIDF_weight);
             }
             System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         }
