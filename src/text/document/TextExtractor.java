@@ -22,7 +22,7 @@ public class TextExtractor {
 
     public TextExtractor() {
     }
-    
+
     public TextExtractor(String _text) {
         this.text = _text;
     }
@@ -56,6 +56,27 @@ public class TextExtractor {
         while (end != BreakIterator.DONE) {
             String sentence = getText().substring(start, end).trim();
             if (!sentence.isEmpty()) {
+                //System.out.println("ΩΩΩΩΩΩΩΩΩΩ " + sentence + " " + sentence.charAt(sentence.length() - 1));
+                sentences.add(sentence);
+            }
+            start = end;
+            end = boundary.next();
+        }
+
+        return sentences;
+    }
+
+    public ArrayList<String> extractParagraphs() {
+        BreakIterator boundary = BreakIterator.getSentenceInstance(Locale.US);
+        boundary.setText(getText());
+
+        ArrayList<String> sentences = new ArrayList<String>();
+        int start = boundary.first();
+        int end = boundary.next();
+        while (end != BreakIterator.DONE) {
+            String sentence = getText().substring(start, end).trim();
+            if (!sentence.isEmpty()) {
+                //System.out.println("ΩΩΩΩΩΩΩΩΩΩ " + sentence);
                 sentences.add(sentence);
             }
             start = end;

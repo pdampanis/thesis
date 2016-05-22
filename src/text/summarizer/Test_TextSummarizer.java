@@ -15,12 +15,12 @@ public class Test_TextSummarizer {
 
     public static void main(String[] args) {
 
-        int i = 0;
-        new HtmlPreprocessor().toFile("html_" + i++, new HtmlPreprocessor().getBodyFromHtmlPage("http://www.naftemporiki.gr/story/1094966/"));
-        new HtmlPreprocessor().toFile("html_" + i++, new HtmlPreprocessor().getBodyFromHtmlPage("http://www.naftemporiki.gr/story/1094893/"));
-        new HtmlPreprocessor().toFile("html_" + i++, new HtmlPreprocessor().getBodyFromHtmlPage("http://www.naftemporiki.gr/story/1094961/"));
-        new HtmlPreprocessor().toFile("html_" + i++, new HtmlPreprocessor().getBodyFromHtmlPage("http://www.naftemporiki.gr/story/1094812/"));
-        new HtmlPreprocessor().toFile("html_" + i++, new HtmlPreprocessor().getBodyFromHtmlPage("http://www.naftemporiki.gr/story/1094784/"));
+//        int i = 0;
+//        new HtmlPreprocessor().toFile("html_" + i++, new HtmlPreprocessor().getBodyFromHtmlPage("http://www.naftemporiki.gr/story/1094966/"));
+//        new HtmlPreprocessor().toFile("html_" + i++, new HtmlPreprocessor().getBodyFromHtmlPage("http://www.naftemporiki.gr/story/1094893/"));
+//        new HtmlPreprocessor().toFile("html_" + i++, new HtmlPreprocessor().getBodyFromHtmlPage("http://www.naftemporiki.gr/story/1094961/"));
+//        new HtmlPreprocessor().toFile("html_" + i++, new HtmlPreprocessor().getBodyFromHtmlPage("http://www.naftemporiki.gr/story/1094812/"));
+//        new HtmlPreprocessor().toFile("html_" + i++, new HtmlPreprocessor().getBodyFromHtmlPage("http://www.naftemporiki.gr/story/1094784/"));
 
 
 //        FilenameFilter pdfFilter = new FilenameFilter() {
@@ -56,7 +56,8 @@ public class Test_TextSummarizer {
             } else {
                 // is a file
                 Document doc = new Document(file.getAbsolutePath());
-                System.out.println(doc);
+                System.out.println("+++++++++++++++++++++++++++++++++++++++++++");
+                System.out.println(doc.id + "    " + doc.name);
                 docs.add(doc);
             }
         }
