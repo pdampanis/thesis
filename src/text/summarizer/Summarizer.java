@@ -29,6 +29,14 @@ public class Summarizer {
         //calculateTF_RIDF();
         //calculateTF_IDF();
         calculateTF_ISF();
+//        for (Document doc : docs){
+//            for (Sentence sen : doc.sentences){
+//                System.out.println("========================");
+//                System.out.println(sen.value);
+//                System.out.println("========================");
+//
+//            }
+//        }
     }
 
     // compute Term Frequency - TF

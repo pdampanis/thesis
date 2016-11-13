@@ -4,9 +4,12 @@ package text.document;
  *
  * @author Panagiotis Dampanis AM:070095
  */
+import java.io.File;
+import java.io.IOException;
 import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Scanner;
 
 public class TextExtractor {
 
@@ -56,7 +59,6 @@ public class TextExtractor {
         while (end != BreakIterator.DONE) {
             String sentence = getText().substring(start, end).trim();
             if (!sentence.isEmpty()) {
-                //System.out.println("ΩΩΩΩΩΩΩΩΩΩ " + sentence + " " + sentence.charAt(sentence.length() - 1));
                 sentences.add(sentence);
             }
             start = end;
@@ -66,23 +68,43 @@ public class TextExtractor {
         return sentences;
     }
 
-    public ArrayList<String> extractParagraphs() {
-        BreakIterator boundary = BreakIterator.getSentenceInstance(Locale.US);
-        boundary.setText(getText());
+    public ArrayList<String> extractParagraphs(String filePath) {
+        try {
+            Scanner scanner = new Scanner(new File(filePath));
+            StringBuilder sb = new StringBuilder();
+            ArrayList<String> paragraphs = new ArrayList<String>();
 
-        ArrayList<String> sentences = new ArrayList<String>();
-        int start = boundary.first();
-        int end = boundary.next();
-        while (end != BreakIterator.DONE) {
-            String sentence = getText().substring(start, end).trim();
-            if (!sentence.isEmpty()) {
-                //System.out.println("ΩΩΩΩΩΩΩΩΩΩ " + sentence);
-                sentences.add(sentence);
+            while (scanner.hasNextLine()) {
+                String str = scanner.nextLine();
+                if (str.trim().endsWith(".") || str.trim().endsWith(";") || str.trim().endsWith("?") || str.trim().endsWith("!")) {
+                    System.out.println(str.length());
+                    if (scanner.hasNextLine()) {
+                        String line = scanner.nextLine();
+                        System.out.println(str.length());
+                        try {
+                            if (Character.isUpperCase(line.trim().charAt(0))) {
+                                sb.append(str);
+                                paragraphs.add(sb.toString());
+                                sb.delete(0, sb.length());
+                                sb.append(line).append("\n");
+                            } else {
+                                sb.append(line).append("\n");
+                            }
+                        } catch (Exception e) {
+                            ;
+                        }
+                    } else {
+                        sb.append(str).append("\n");
+                        paragraphs.add(sb.toString());
+                    }
+                } else {
+                    sb.append(str).append("\n");
+                }
             }
-            start = end;
-            end = boundary.next();
+            return paragraphs;
+        } catch (IOException e) {
+            System.out.println("File does not exist.");
         }
-
-        return sentences;
+        return null;
     }
 }

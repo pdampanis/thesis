@@ -15,6 +15,9 @@ public class Sentence {
     public Double TF_IDF_weight;
     public Double TF_ISF_weight;
     public Double TF_RIDF_weight;
+    public Double baxendaleValue;
+    public Double newsArticleValue;
+    public Double TT;
 
     public Sentence(String _value, ArrayList<Word> _terms) {
         value = _value;

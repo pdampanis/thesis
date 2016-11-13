@@ -24,7 +24,7 @@ public class Document {
     public ArrayList<String> stringSentences;
     public ArrayList<Sentence> sentences;
     public ArrayList<ArrayList<Word>> termsBySentence;
-    
+    public ArrayList<Paragraph> paragraphs;
 
     public Document(String name) {
         this.name = name;
@@ -32,10 +32,18 @@ public class Document {
         loadFile(name);
         stringSentences = getAllSentences();
         terms = getTerms();
+        
+        for (String paragraph : getAllParagraphs(name)){
+            System.out.println("================================");
+            System.out.println(paragraph);
+            System.out.println("================================");
+        }
+                
+            
         termsBySentence = new ArrayList<ArrayList<Word>>(stringSentences.size());
         sentences = new ArrayList<Sentence>();
-        
-        for(String sentence : stringSentences){
+
+        for (String sentence : stringSentences) {
             ArrayList<Word> termsBySent = getTermsBySentence(sentence);
             sentences.add(new Sentence(sentence, termsBySent));
             termsBySentence.add(termsBySent);
@@ -95,9 +103,9 @@ public class Document {
         ArrayList<Word> finalTerms = tc.getFinalTerms();
         return finalTerms;
     }
-    
-    public void setTerms(List<Word> wordList){
-        for(Word word : wordList){
+
+    public void setTerms(List<Word> wordList) {
+        for (Word word : wordList) {
             terms.add(word);
         }
     }
@@ -108,14 +116,19 @@ public class Document {
         tc.setSentences(stringSentences);
         return stringSentences;
     }
+    
+    public ArrayList<String> getAllParagraphs(String name) {
+        return createTextExtractor().extractParagraphs(name);
+    }
 
     public ArrayList<Word> getTermsBySentence(String sentence) {
         ArrayList<String> strs = new TextExtractor(sentence).extractTerms();
         ArrayList<Word> wordList = new ArrayList<Word>();
         for (String str : strs) {
             String temp = new TermPreprocessor().preprocess(str);
-            if(temp != null)
+            if (temp != null) {
                 wordList.add(new Word(temp));
+            }
         }
         return wordList;
     }
