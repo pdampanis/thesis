@@ -15,9 +15,14 @@ public class Sentence {
     public Double TF_IDF_weight;
     public Double TF_ISF_weight;
     public Double TF_RIDF_weight;
-    public Double baxendaleValue;
+    public Double baxendaleValue_first_sentence;
+    public Double baxendaleValue_last_sentence;
     public Double newsArticleValue;
     public Double TT;
+
+    public Sentence(String _value){
+        value = _value;
+    }
 
     public Sentence(String _value, ArrayList<Word> _terms) {
         value = _value;
@@ -41,7 +46,7 @@ public class Sentence {
             }
         }
     }
-    
+
     @Override
     public String toString(){
         StringBuilder sb = new StringBuilder();

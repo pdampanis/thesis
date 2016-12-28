@@ -37,6 +37,7 @@ public class Document {
             System.out.println("================================");
             System.out.println(paragraph);
             System.out.println("================================");
+            paragraphs.add(new Paragraph(paragraph, getSentencesByParagraph(paragraph)));
         }
                 
             
@@ -115,6 +116,15 @@ public class Document {
         TermCollection tc = new TermCollection();
         tc.setSentences(stringSentences);
         return stringSentences;
+    }
+
+    private ArrayList<Sentence> getSentencesByParagraph(String paragraph){
+        ArrayList<String> sentences = new TextExtractor(paragraph).extractSentences();
+        ArrayList<Sentence> sentencesByParagraph = new ArrayList<Sentence>();
+        for (String sentence : sentences) {
+            sentencesByParagraph.add(new Sentence(sentence));
+        }
+        return sentencesByParagraph;
     }
     
     public ArrayList<String> getAllParagraphs(String name) {
