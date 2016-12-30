@@ -20,9 +20,6 @@ public class Sentence {
     public Double newsArticleValue;
     public Double TT;
 
-    public Sentence(String _value){
-        value = _value;
-    }
 
     public Sentence(String _value, ArrayList<Word> _terms) {
         value = _value;

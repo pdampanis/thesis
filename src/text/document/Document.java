@@ -32,12 +32,15 @@ public class Document {
         loadFile(name);
         stringSentences = getAllSentences();
         terms = getTerms();
+        paragraphs = new ArrayList<Paragraph>();
         
         for (String paragraph : getAllParagraphs(name)){
             System.out.println("================================");
             System.out.println(paragraph);
             System.out.println("================================");
-            paragraphs.add(new Paragraph(paragraph, getSentencesByParagraph(paragraph)));
+            ArrayList<Sentence> x = getSentencesByParagraph(paragraph);
+            System.out.println(x);
+            paragraphs.add(new Paragraph(paragraph, x));
         }
                 
             
@@ -122,7 +125,8 @@ public class Document {
         ArrayList<String> sentences = new TextExtractor(paragraph).extractSentences();
         ArrayList<Sentence> sentencesByParagraph = new ArrayList<Sentence>();
         for (String sentence : sentences) {
-            sentencesByParagraph.add(new Sentence(sentence));
+            ArrayList<Word> x = getTermsBySentence(sentence);
+            sentencesByParagraph.add(new Sentence(sentence, x));
         }
         return sentencesByParagraph;
     }
