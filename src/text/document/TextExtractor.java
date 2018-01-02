@@ -65,6 +65,17 @@ public class TextExtractor {
             end = boundary.next();
         }
 
+        for (String sentence : sentences) {
+            if (sentence.contains("\n")) {
+                ArrayList<String> newSentences = new ArrayList<String>();
+                String[] allSentences = sentence.split("\n");
+                for (String s : allSentences) {
+                    newSentences.add(s);
+                }
+                return newSentences;
+            }
+        }
+
         return sentences;
     }
 

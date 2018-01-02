@@ -20,8 +20,4 @@ public class Paragraph {
         sentences = _sentences;
     }
 
-    private void setBaxendaleValues(){
-
-    }
-
 }

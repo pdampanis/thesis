@@ -5,7 +5,11 @@ package text.summarizer;
  * @author Panagiotis Dampanis AM:070095
  */
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import text.document.Document;
+import text.document.Paragraph;
 import text.document.Sentence;
 import text.term.Word;
 
@@ -13,11 +17,18 @@ public class Summarizer {
 
     private ArrayList<Document> docs;
     private int numberOfDocs;
+    private double weight_ST;
+    private double weight_SL;
+    private double weight_TT;
+
 
     public Summarizer(ArrayList<Document> _docs) {
         docs = new ArrayList<Document>();
         docs = _docs;
         numberOfDocs = docs.size();
+        weight_ST = 1.0;
+        weight_SL = 1.0;
+        weight_TT = 1.0;
     }
 
     // TODO: summarize - use the linear approach using all the statistical measurements
@@ -29,14 +40,7 @@ public class Summarizer {
         //calculateTF_RIDF();
         //calculateTF_IDF();
         calculateTF_ISF();
-//        for (Document doc : docs){
-//            for (Sentence sen : doc.sentences){
-//                System.out.println("========================");
-//                System.out.println(sen.value);
-//                System.out.println("========================");
-//
-//            }
-//        }
+
     }
 
     // compute Term Frequency - TF
@@ -69,13 +73,24 @@ public class Summarizer {
     // Sentence Weighting based on TF*IDF
     public void calculateTF_IDF() {
         for (Document doc : docs) {
+            Map<Double,String> sentenceMap = new HashMap<Double,String>();
             for (Sentence sentence : doc.sentences) {
                 Double sum = 0.0;
+                Double sentenceWeight = 0.0;
                 for (Word word : sentence.terms) {
                     sum += word.termWeight * word.termWeightInACollection;
                 }
                 sentence.TF_IDF_weight = sum;
-                System.out.println(sentence.value + "==================================\n" + sentence.TF_IDF_weight);
+
+                //sentenceWeight = weight_ST * sentence.TF_IDF_weight + weight_SL * SL_Factor +
+                //        weight_TT + TT_Factor;
+
+                sentence.weight = sentenceWeight;
+
+                sentenceMap.put(sentence.weight,sentence.value);
+
+                System.out.println(sentence.value + "==================================\n" + sentence.TF_IDF_weight +
+                                    "----------------------------\n" + sentence.baxendaleValue);
             }
             System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         }
@@ -84,13 +99,37 @@ public class Summarizer {
     // Sentence weighting based on TF*ISF
     public void calculateTF_ISF() {
         for (Document doc : docs) {
+            for (Paragraph p : doc.paragraphs) {
+                for (int i = 0; i < p.sentences.size(); i++) {
+                    p.sentences.get(i).baxendaleValue = 0.0;
+
+                    if (i == 0) {
+                        p.sentences.get(i).baxendaleValue = 0.85;
+                    }
+                    if (i == p.sentences.size() - 1) {
+                        p.sentences.get(i).baxendaleValue = 0.07;
+                    }
+                }
+            }
+            // TODO: For every doc, for every paragraph, for every sentence - singleton ?
+            // Map to keep the final score of the sentence and the sentence itself for showing in the end
+            // the actuall summarized text.
+            Map<Double,String> sentenceMap = new HashMap<Double,String>();
             for (Sentence sentence : doc.sentences) {
                 Double sum = 0.0;
+                Double sentenceWeight = 0.0;
+
                 for (Word word : sentence.terms) {
                     sum += word.termWeight * ns(word, doc.sentences);
                 }
                 sentence.TF_ISF_weight = sum;
-                System.out.println(sentence.value + "==================================\n" + sentence.TF_ISF_weight);
+
+                sentence.weight = sentenceWeight;
+
+                sentenceMap.put(sentence.weight,sentence.value);
+
+                System.out.println(sentence.value + "==================================\n" + sentence.TF_ISF_weight +
+                        "----------------------------\n" + sentence.baxendaleValue);
             }
             System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         }
@@ -168,4 +207,5 @@ public class Summarizer {
             }
         }
     }
+
 }

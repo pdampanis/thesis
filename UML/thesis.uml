@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="724.0" y="678.0">text.document.TextExtractor</node>
+    <node x="358.0" y="1092.0">text.term.TermPreprocessor</node>
+    <node x="0.0" y="1092.0">text.term.TermCollectionProcessor</node>
+    <node x="492.0" y="0.0">text.term.TermCollection</node>
+    <node x="848.0" y="0.0">text.summarizer.Summarizer</node>
+    <node x="382.0" y="678.0">text.term.Word</node>
+    <node x="0.0" y="0.0">text.document.Document</node>
+    <node x="0.0" y="678.0">text.document.Sentence</node>
+    <node x="714.0" y="1092.0">text.document.Paragraph</node>
+  </nodes>
+  <notes />
+  <edges />
+  <settings layout="Hierarchic Group" zoom="1.0" x="262.5" y="320.0" />
+  <SelectedNodes>
+    <node>text.document.Paragraph</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Constructors</Category>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
