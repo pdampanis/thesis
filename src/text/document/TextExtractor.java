@@ -88,10 +88,8 @@ public class TextExtractor {
             while (scanner.hasNextLine()) {
                 String str = scanner.nextLine();
                 if (str.trim().endsWith(".") || str.trim().endsWith(";") || str.trim().endsWith("?") || str.trim().endsWith("!")) {
-                    System.out.println(str.length());
                     if (scanner.hasNextLine()) {
                         String line = scanner.nextLine();
-                        System.out.println(str.length());
                         try {
                             if (Character.isUpperCase(line.trim().charAt(0))) {
                                 sb.append(str);

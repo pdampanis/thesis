@@ -40,6 +40,15 @@ public class Summarizer {
         //calculateTF_RIDF();
         //calculateTF_IDF();
         calculateTF_ISF();
+        for(Document doc : docs){
+            computeTitleWeight(doc);
+            for(Sentence s : doc.sentences){
+                s.weight = weight_ST * s.TF_ISF_weight + weight_SL * s.baxendaleValue + weight_TT * s.TT;
+                System.out.println(s.value);
+                System.out.println(s.weight);
+            }
+        }
+
 
     }
 
@@ -73,71 +82,35 @@ public class Summarizer {
     // Sentence Weighting based on TF*IDF
     public void calculateTF_IDF() {
         for (Document doc : docs) {
-            Map<Double,String> sentenceMap = new HashMap<Double,String>();
             for (Sentence sentence : doc.sentences) {
                 Double sum = 0.0;
-                Double sentenceWeight = 0.0;
                 for (Word word : sentence.terms) {
                     sum += word.termWeight * word.termWeightInACollection;
                 }
                 sentence.TF_IDF_weight = sum;
-
-                //sentenceWeight = weight_ST * sentence.TF_IDF_weight + weight_SL * SL_Factor +
-                //        weight_TT + TT_Factor;
-
-                sentence.weight = sentenceWeight;
-
-                sentenceMap.put(sentence.weight,sentence.value);
-
-                System.out.println(sentence.value + "==================================\n" + sentence.TF_IDF_weight +
-                                    "----------------------------\n" + sentence.baxendaleValue);
             }
-            System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         }
     }
 
     // Sentence weighting based on TF*ISF
     public void calculateTF_ISF() {
         for (Document doc : docs) {
-            for (Paragraph p : doc.paragraphs) {
-                for (int i = 0; i < p.sentences.size(); i++) {
-                    p.sentences.get(i).baxendaleValue = 0.0;
-
-                    if (i == 0) {
-                        p.sentences.get(i).baxendaleValue = 0.85;
-                    }
-                    if (i == p.sentences.size() - 1) {
-                        p.sentences.get(i).baxendaleValue = 0.07;
-                    }
-                }
-            }
-            // TODO: For every doc, for every paragraph, for every sentence - singleton ?
-            // Map to keep the final score of the sentence and the sentence itself for showing in the end
-            // the actuall summarized text.
-            Map<Double,String> sentenceMap = new HashMap<Double,String>();
+            putBaxendaleValues(doc);
             for (Sentence sentence : doc.sentences) {
                 Double sum = 0.0;
-                Double sentenceWeight = 0.0;
 
                 for (Word word : sentence.terms) {
                     sum += word.termWeight * ns(word, doc.sentences);
                 }
                 sentence.TF_ISF_weight = sum;
-
-                sentence.weight = sentenceWeight;
-
-                sentenceMap.put(sentence.weight,sentence.value);
-
-                System.out.println(sentence.value + "==================================\n" + sentence.TF_ISF_weight +
-                        "----------------------------\n" + sentence.baxendaleValue);
             }
-            System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         }
     }
 
     // Sentence weighting based on TF*RIDF
     public void calculateTF_RIDF() {
         for (Document doc : docs) {
+            putBaxendaleValues(doc);
             for (Sentence sentence : doc.sentences) {
                 Double sum = 0.0;
                 for (Word word : sentence.terms) {
@@ -145,10 +118,42 @@ public class Summarizer {
                     sum += word.termWeight * rIDF;
                 }
                 sentence.TF_RIDF_weight = sum;
-                System.out.println(sentence.value + "==================================\n" + sentence.TF_RIDF_weight);
             }
-            System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         }
+    }
+
+    private void putBaxendaleValues(Document doc) {
+        for (Paragraph p : doc.paragraphs) {
+            for (int i = 0; i < p.sentences.size(); i++) {
+                p.sentences.get(i).baxendaleValue = 0.0;
+
+                if (i == 0) {
+                    p.sentences.get(i).baxendaleValue = 0.85;
+                }
+                if (i == p.sentences.size() - 1) {
+                    p.sentences.get(i).baxendaleValue = 0.07;
+                }
+            }
+        }
+    }
+
+    private void computeTitleWeight(Document doc){
+        for(Sentence s : doc.sentences) {
+            s.TT = countStemsinTitle(s, doc.title);
+        }
+    }
+
+    private double countStemsinTitle(Sentence s1, Sentence s2){
+        double count = 0.0;
+        // If the sentence is the title do not take it into account
+        if(s1.equals(s2)) return 0.0;
+        for(Word w : s1.terms) {
+            for(Word titleTerm : s2.terms) {
+                if(w.value.equals(titleTerm.value))
+                    count++;
+            }
+        }
+        return count;
     }
 
     public Double getDocFreq(Word word) {
