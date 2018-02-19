@@ -20,8 +20,8 @@ public class Document {
     public int id;
     public String name;
     protected String content;
+    public Sentence title;
     public ArrayList<Word> terms;
-    public ArrayList<String> stringSentences;
     public ArrayList<Sentence> sentences;
     public ArrayList<ArrayList<Word>> termsBySentence;
     public ArrayList<Paragraph> paragraphs;
@@ -30,28 +30,24 @@ public class Document {
         this.name = name;
         this.id = count.incrementAndGet();
         loadFile(name);
-        stringSentences = getAllSentences();
         terms = getTerms();
         paragraphs = new ArrayList<Paragraph>();
-        
-        for (String paragraph : getAllParagraphs(name)){
-            System.out.println("================================");
-            System.out.println(paragraph);
-            System.out.println("================================");
-            ArrayList<Sentence> x = getSentencesByParagraph(paragraph);
-            System.out.println(x);
-            paragraphs.add(new Paragraph(paragraph, x));
-        }
-                
-            
-        termsBySentence = new ArrayList<ArrayList<Word>>(stringSentences.size());
         sentences = new ArrayList<Sentence>();
 
-        for (String sentence : stringSentences) {
-            ArrayList<Word> termsBySent = getTermsBySentence(sentence);
-            sentences.add(new Sentence(sentence, termsBySent));
-            termsBySentence.add(termsBySent);
+
+        for (String paragraph : getAllParagraphs(name)){
+            ArrayList<Sentence> sentenceList = getSentencesByParagraph(paragraph);
+            termsBySentence = new ArrayList<ArrayList<Word>>(sentenceList.size());
+
+            for (Sentence s : sentenceList){
+                sentences.add(new Sentence(s.value, getTermsBySentence(s.value)));
+                termsBySentence.add(getTermsBySentence(s.value));
+            }
+            paragraphs.add(new Paragraph(paragraph, sentences));
         }
+        // Set the title of the document to be the first sentence of it
+        title = sentences.get(0);
+
     }
 
     public void loadFile(String filePath) {
@@ -114,19 +110,12 @@ public class Document {
         }
     }
 
-    public ArrayList<String> getAllSentences() {
-        stringSentences = createTextExtractor().extractSentences();
-        TermCollection tc = new TermCollection();
-        tc.setSentences(stringSentences);
-        return stringSentences;
-    }
-
     private ArrayList<Sentence> getSentencesByParagraph(String paragraph){
         ArrayList<String> sentences = new TextExtractor(paragraph).extractSentences();
         ArrayList<Sentence> sentencesByParagraph = new ArrayList<Sentence>();
         for (String sentence : sentences) {
-            ArrayList<Word> x = getTermsBySentence(sentence);
-            sentencesByParagraph.add(new Sentence(sentence, x));
+            ArrayList<Word> termList = getTermsBySentence(sentence);
+            sentencesByParagraph.add(new Sentence(sentence, termList));
         }
         return sentencesByParagraph;
     }

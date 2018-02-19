@@ -65,6 +65,17 @@ public class TextExtractor {
             end = boundary.next();
         }
 
+        for (String sentence : sentences) {
+            if (sentence.contains("\n")) {
+                ArrayList<String> newSentences = new ArrayList<String>();
+                String[] allSentences = sentence.split("\n");
+                for (String s : allSentences) {
+                    newSentences.add(s);
+                }
+                return newSentences;
+            }
+        }
+
         return sentences;
     }
 
@@ -77,10 +88,8 @@ public class TextExtractor {
             while (scanner.hasNextLine()) {
                 String str = scanner.nextLine();
                 if (str.trim().endsWith(".") || str.trim().endsWith(";") || str.trim().endsWith("?") || str.trim().endsWith("!")) {
-                    System.out.println(str.length());
                     if (scanner.hasNextLine()) {
                         String line = scanner.nextLine();
-                        System.out.println(str.length());
                         try {
                             if (Character.isUpperCase(line.trim().charAt(0))) {
                                 sb.append(str);

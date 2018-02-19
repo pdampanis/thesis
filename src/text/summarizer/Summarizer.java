@@ -5,7 +5,11 @@ package text.summarizer;
  * @author Panagiotis Dampanis AM:070095
  */
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import text.document.Document;
+import text.document.Paragraph;
 import text.document.Sentence;
 import text.term.Word;
 
@@ -13,11 +17,18 @@ public class Summarizer {
 
     private ArrayList<Document> docs;
     private int numberOfDocs;
+    private double weight_ST;
+    private double weight_SL;
+    private double weight_TT;
+
 
     public Summarizer(ArrayList<Document> _docs) {
         docs = new ArrayList<Document>();
         docs = _docs;
         numberOfDocs = docs.size();
+        weight_ST = 1.0;
+        weight_SL = 1.0;
+        weight_TT = 1.0;
     }
 
     // TODO: summarize - use the linear approach using all the statistical measurements
@@ -29,14 +40,16 @@ public class Summarizer {
         //calculateTF_RIDF();
         //calculateTF_IDF();
         calculateTF_ISF();
-//        for (Document doc : docs){
-//            for (Sentence sen : doc.sentences){
-//                System.out.println("========================");
-//                System.out.println(sen.value);
-//                System.out.println("========================");
-//
-//            }
-//        }
+        for(Document doc : docs){
+            computeTitleWeight(doc);
+            for(Sentence s : doc.sentences){
+                s.weight = weight_ST * s.TF_ISF_weight + weight_SL * s.baxendaleValue + weight_TT * s.TT;
+                System.out.println(s.value);
+                System.out.println(s.weight);
+            }
+        }
+
+
     }
 
     // compute Term Frequency - TF
@@ -75,30 +88,29 @@ public class Summarizer {
                     sum += word.termWeight * word.termWeightInACollection;
                 }
                 sentence.TF_IDF_weight = sum;
-                System.out.println(sentence.value + "==================================\n" + sentence.TF_IDF_weight);
             }
-            System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         }
     }
 
     // Sentence weighting based on TF*ISF
     public void calculateTF_ISF() {
         for (Document doc : docs) {
+            putBaxendaleValues(doc);
             for (Sentence sentence : doc.sentences) {
                 Double sum = 0.0;
+
                 for (Word word : sentence.terms) {
                     sum += word.termWeight * ns(word, doc.sentences);
                 }
                 sentence.TF_ISF_weight = sum;
-                System.out.println(sentence.value + "==================================\n" + sentence.TF_ISF_weight);
             }
-            System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         }
     }
 
     // Sentence weighting based on TF*RIDF
     public void calculateTF_RIDF() {
         for (Document doc : docs) {
+            putBaxendaleValues(doc);
             for (Sentence sentence : doc.sentences) {
                 Double sum = 0.0;
                 for (Word word : sentence.terms) {
@@ -106,10 +118,42 @@ public class Summarizer {
                     sum += word.termWeight * rIDF;
                 }
                 sentence.TF_RIDF_weight = sum;
-                System.out.println(sentence.value + "==================================\n" + sentence.TF_RIDF_weight);
             }
-            System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         }
+    }
+
+    private void putBaxendaleValues(Document doc) {
+        for (Paragraph p : doc.paragraphs) {
+            for (int i = 0; i < p.sentences.size(); i++) {
+                p.sentences.get(i).baxendaleValue = 0.0;
+
+                if (i == 0) {
+                    p.sentences.get(i).baxendaleValue = 0.85;
+                }
+                if (i == p.sentences.size() - 1) {
+                    p.sentences.get(i).baxendaleValue = 0.07;
+                }
+            }
+        }
+    }
+
+    private void computeTitleWeight(Document doc){
+        for(Sentence s : doc.sentences) {
+            s.TT = countStemsinTitle(s, doc.title);
+        }
+    }
+
+    private double countStemsinTitle(Sentence s1, Sentence s2){
+        double count = 0.0;
+        // If the sentence is the title do not take it into account
+        if(s1.equals(s2)) return 0.0;
+        for(Word w : s1.terms) {
+            for(Word titleTerm : s2.terms) {
+                if(w.value.equals(titleTerm.value))
+                    count++;
+            }
+        }
+        return count;
     }
 
     public Double getDocFreq(Word word) {
@@ -168,4 +212,5 @@ public class Summarizer {
             }
         }
     }
+
 }
