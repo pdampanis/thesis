@@ -5,8 +5,8 @@ package text.term;
  * @author Panagiotis Dampanis AM: 070095
  */
 import java.util.ArrayList;
-import stemmer.nnkstem;
-import stemmer.word_node;
+import nnkstemmer.nnkstem;
+import nnkstemmer.word_node;
 
 public class TermPreprocessor {
 
@@ -52,7 +52,7 @@ public class TermPreprocessor {
 
     public String toStem(String term) {
         nnkstem stemmer = new nnkstem();
-        ArrayList word = new ArrayList<word_node>();
+        ArrayList<word_node> word = new ArrayList<word_node>();
         stemmer.StrToWords(term.trim(), word);
         stemmer.rswas(word);
         String stem = null;

@@ -14,7 +14,7 @@ import text.term.TermCollection;
 import text.term.TermPreprocessor;
 import text.term.Word;
 
-public class Document {
+public class  Document {
 
     private static final AtomicInteger count = new AtomicInteger(0);
     public int id;
@@ -61,7 +61,8 @@ public class Document {
                     sb.append("\n");
                 }
             }
-
+            
+            scanner.close();
             setContent(sb.toString());
         } catch (IOException e) {
             System.out.println("File does not exist.");
